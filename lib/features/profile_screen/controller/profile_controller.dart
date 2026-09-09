@@ -63,6 +63,15 @@ class ProfileController extends ChangeNotifier {
               Navigator.pop(ctx);
               await AuthService.instance.signOut();
               if (context.mounted) {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Logged out successfully'),
+                    backgroundColor: Colors.black,
+                    duration: Duration(seconds: 1),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   AppRoutes.login,

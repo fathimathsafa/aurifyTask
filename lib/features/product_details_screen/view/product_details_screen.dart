@@ -67,52 +67,129 @@ class ProductDetailsScreen extends StatelessWidget {
             ],
           ),
           body: controller.isLoading && product == null
-              ? const Center(
-                  child: CircularProgressIndicator(color: AppColors.black),
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(
+                        color: AppColors.black,
+                        strokeWidth: 2.5,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Loading product details...',
+                        style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
                 )
               : controller.errorMessage != null && product == null
                   ? Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(24.0),
+                        padding: const EdgeInsets.all(32.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(
-                              Icons.error_outline_rounded,
-                              size: 56,
-                              color: AppColors.gray500,
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                color: AppColors.surface,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.error_outline_rounded,
+                                  size: 40,
+                                  color: AppColors.black,
+                                ),
+                              ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 20),
                             Text(
                               'Failed to Load Details',
-                              style: AppTextStyles.titleMedium(color: AppColors.textPrimary),
+                              style: AppTextStyles.headlineSmall(color: AppColors.textPrimary)
+                                  .copyWith(fontWeight: FontWeight.w800),
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 8),
                             Text(
                               controller.errorMessage!,
                               textAlign: TextAlign.center,
-                              style: AppTextStyles.bodySmall(color: AppColors.textSecondary),
+                              style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 24),
                             if (controller.productId != null)
-                              ElevatedButton(
+                              ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.black,
                                   foregroundColor: AppColors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 onPressed: () =>
                                     controller.fetchProductDetails(controller.productId!),
-                                child: const Text('Try Again'),
+                                icon: const Icon(Icons.refresh_rounded, size: 18),
+                                label: const Text('Retry'),
                               ),
                           ],
                         ),
                       ),
                     )
                   : product == null
-                      ? const Center(child: Text('Product not found'))
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(32.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.surface,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(color: AppColors.border),
+                                  ),
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.inventory_2_outlined,
+                                      size: 40,
+                                      color: AppColors.black,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 20),
+                                Text(
+                                  'Product Not Found',
+                                  style: AppTextStyles.headlineSmall(color: AppColors.textPrimary)
+                                      .copyWith(fontWeight: FontWeight.w800),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'The requested product could not be found or has been removed.',
+                                  textAlign: TextAlign.center,
+                                  style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.black,
+                                    foregroundColor: AppColors.white,
+                                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('Go Back'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                       : Center(
                           child: ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 680),

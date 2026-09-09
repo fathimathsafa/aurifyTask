@@ -89,11 +89,22 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   if (controller.isLoading && products.isEmpty)
-                    const SliverFillRemaining(
+                    SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColors.black,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const CircularProgressIndicator(
+                              color: AppColors.black,
+                              strokeWidth: 2.5,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Loading curated collection...',
+                              style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+                            ),
+                          ],
                         ),
                       ),
                     )
@@ -102,38 +113,107 @@ class HomeScreen extends StatelessWidget {
                       hasScrollBody: false,
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.all(24.0),
+                          padding: const EdgeInsets.all(32.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              const Icon(
-                                Icons.cloud_off_rounded,
-                                size: 56,
-                                color: AppColors.gray500,
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.cloud_off_rounded,
+                                    size: 40,
+                                    color: AppColors.black,
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: 20),
                               Text(
                                 'Unable to Load Products',
-                                style: AppTextStyles.titleMedium(color: AppColors.textPrimary),
+                                style: AppTextStyles.headlineSmall(color: AppColors.textPrimary)
+                                    .copyWith(fontWeight: FontWeight.w800),
                               ),
-                              const SizedBox(height: 6),
+                              const SizedBox(height: 8),
                               Text(
                                 controller.errorMessage!,
                                 textAlign: TextAlign.center,
-                                style: AppTextStyles.bodySmall(color: AppColors.textSecondary),
+                                style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 24),
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.black,
                                   foregroundColor: AppColors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
                                 onPressed: controller.fetchProducts,
                                 icon: const Icon(Icons.refresh_rounded, size: 18),
-                                label: const Text('Try Again'),
+                                label: const Text('Retry'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  else if (products.isEmpty && controller.searchQuery.isNotEmpty)
+                    SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.search_off_rounded,
+                                    size: 40,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                'No Results for "${controller.searchQuery}"',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.headlineSmall(color: AppColors.textPrimary)
+                                    .copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'We couldn\'t find any products matching your search. Try checking your spelling or use different keywords.',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+                              ),
+                              const SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.black,
+                                  foregroundColor: AppColors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: controller.clearSearch,
+                                child: const Text('Clear Search'),
                               ),
                             ],
                           ),
@@ -144,25 +224,67 @@ class HomeScreen extends StatelessWidget {
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.search_off_rounded,
-                              size: 64,
-                              color: AppColors.gray500,
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'No Products Found',
-                              style: AppTextStyles.headlineSmall(color: AppColors.textPrimary),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              'Try adjusting your search or category filter.',
-                              style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(32.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 80,
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  color: AppColors.surface,
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: AppColors.border),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.inventory_2_outlined,
+                                    size: 40,
+                                    color: AppColors.black,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              Text(
+                                controller.selectedCategory != 'All'
+                                    ? 'No Products in ${controller.selectedCategory}'
+                                    : 'No Products Available',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.headlineSmall(color: AppColors.textPrimary)
+                                    .copyWith(fontWeight: FontWeight.w800),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'There are currently no items available in this category. Explore all products or refresh.',
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+                              ),
+                              const SizedBox(height: 24),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.black,
+                                  foregroundColor: AppColors.white,
+                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  if (controller.selectedCategory != 'All') {
+                                    controller.selectCategory('All');
+                                  } else {
+                                    controller.fetchProducts();
+                                  }
+                                },
+                                child: Text(
+                                  controller.selectedCategory != 'All'
+                                      ? 'View All Products'
+                                      : 'Refresh Products',
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )

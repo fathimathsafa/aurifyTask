@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/services/auth_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 
@@ -41,12 +42,16 @@ class _SplashScreenState extends State<SplashScreen>
 
     _animationController.forward();
 
-    _timer = Timer(const Duration(milliseconds: 2500), _navigateToLogin);
+    _timer = Timer(const Duration(milliseconds: 2500), _navigateToNextScreen);
   }
 
-  void _navigateToLogin() {
+  void _navigateToNextScreen() {
     if (mounted) {
-      Navigator.pushReplacementNamed(context, AppRoutes.login);
+      final bool isLoggedIn = AuthService.instance.currentUser != null;
+      Navigator.pushReplacementNamed(
+        context,
+        isLoggedIn ? AppRoutes.home : AppRoutes.login,
+      );
     }
   }
 
