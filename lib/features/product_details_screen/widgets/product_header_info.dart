@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../home_screen/model/product_model.dart';
+import '../model/product_details_model.dart';
 
 class ProductHeaderInfo extends StatelessWidget {
-  final ProductModel product;
+  final ProductDetailsModel product;
 
   const ProductHeaderInfo({
     super.key,
@@ -13,6 +13,11 @@ class ProductHeaderInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stock = product.safeStock;
+    final rating = product.safeRating;
+    final price = product.safePrice;
+    final discount = product.discountPercentage ?? 0.0;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -20,7 +25,7 @@ class ProductHeaderInfo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              product.brand.toUpperCase(),
+              product.displayBrand.toUpperCase(),
               style: AppTextStyles.labelMedium(color: AppColors.textSecondary).copyWith(
                 letterSpacing: 1.5,
                 fontWeight: FontWeight.w700,
@@ -29,10 +34,10 @@ class ProductHeaderInfo extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: product.stock > 0 ? AppColors.surface : AppColors.gray200,
+                color: stock > 0 ? AppColors.surface : AppColors.gray200,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: product.stock > 0 ? AppColors.border : AppColors.gray400,
+                  color: stock > 0 ? AppColors.border : AppColors.gray400,
                 ),
               ),
               child: Row(
@@ -48,7 +53,7 @@ class ProductHeaderInfo extends StatelessWidget {
                   ),
                   const SizedBox(width: 6),
                   Text(
-                    product.stock > 0 ? 'In Stock (${product.stock} left)' : 'Out of Stock',
+                    stock > 0 ? 'In Stock ($stock left)' : 'Out of Stock',
                     style: AppTextStyles.labelSmall(color: AppColors.textPrimary).copyWith(
                       fontWeight: FontWeight.w600,
                     ),
@@ -61,7 +66,7 @@ class ProductHeaderInfo extends StatelessWidget {
         const SizedBox(height: 8),
 
         Text(
-          product.title,
+          product.displayTitle,
           style: AppTextStyles.headlineLarge(color: AppColors.textPrimary).copyWith(
             fontWeight: FontWeight.w800,
             letterSpacing: -0.5,
@@ -87,7 +92,7 @@ class ProductHeaderInfo extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    '${product.rating}',
+                    '$rating',
                     style: AppTextStyles.labelMedium(color: AppColors.white).copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -109,22 +114,20 @@ class ProductHeaderInfo extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              '\$${product.price.toStringAsFixed(2)}',
+              '\$${price.toStringAsFixed(2)}',
               style: AppTextStyles.displaySmall(color: AppColors.textPrimary).copyWith(
                 fontWeight: FontWeight.w900,
               ),
             ),
-            if (product.originalPrice != null) ...[
+            if (product.hasDiscount) ...[
               const SizedBox(width: 10),
               Text(
-                '\$${product.originalPrice!.toStringAsFixed(2)}',
+                '\$${product.originalPrice.toStringAsFixed(2)}',
                 style: AppTextStyles.titleMedium(color: AppColors.textMuted).copyWith(
                   decoration: TextDecoration.lineThrough,
                   fontWeight: FontWeight.w500,
                 ),
               ),
-            ],
-            if (product.hasDiscount) ...[
               const SizedBox(width: 10),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -133,7 +136,7 @@ class ProductHeaderInfo extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  '${product.discountPercentage.toInt()}% OFF',
+                  '${discount.toInt()}% OFF',
                   style: AppTextStyles.labelSmall(color: AppColors.white).copyWith(
                     fontWeight: FontWeight.w700,
                     letterSpacing: 0.5,

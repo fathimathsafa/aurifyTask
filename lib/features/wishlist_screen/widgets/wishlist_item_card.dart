@@ -5,7 +5,7 @@ import '../../home_screen/model/product_model.dart';
 import '../../../core/routes/app_routes.dart';
 
 class WishlistItemCard extends StatelessWidget {
-  final ProductModel product;
+  final Product product;
   final VoidCallback onRemove;
   final VoidCallback onMoveToCart;
 
@@ -74,7 +74,7 @@ class WishlistItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        product.category.toUpperCase(),
+                        product.displayCategory.toUpperCase(),
                         style: AppTextStyles.labelSmall(color: AppColors.textSecondary).copyWith(
                           letterSpacing: 1.0,
                           fontWeight: FontWeight.w700,
@@ -97,7 +97,7 @@ class WishlistItemCard extends StatelessWidget {
                   const SizedBox(height: 2),
 
                   Text(
-                    product.title,
+                    product.displayTitle,
                     style: AppTextStyles.titleSmall(color: AppColors.textPrimary).copyWith(
                       fontWeight: FontWeight.w700,
                     ),
@@ -110,7 +110,7 @@ class WishlistItemCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$${product.price.toStringAsFixed(2)}',
+                        '\$${product.safePrice.toStringAsFixed(2)}',
                         style: AppTextStyles.titleMedium(color: AppColors.textPrimary).copyWith(
                           fontWeight: FontWeight.w800,
                         ),

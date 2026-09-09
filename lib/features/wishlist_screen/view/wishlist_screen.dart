@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../core/responsive/responsive.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../home_screen/model/product_model.dart';
 import '../controller/wishlist_controller.dart';
 import '../widgets/wishlist_empty_state.dart';
 import '../widgets/wishlist_header_summary.dart';
@@ -13,9 +12,8 @@ class WishlistScreen extends StatelessWidget {
 
   WishlistScreen({
     super.key,
-    List<ProductModel>? initialItems,
     WishlistController? controller,
-  }) : controller = controller ?? WishlistController(initialItems: initialItems);
+  }) : controller = controller ?? WishlistController();
 
   @override
   Widget build(BuildContext context) {

@@ -71,7 +71,7 @@ class CartItemCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      product.category.toUpperCase(),
+                      product.displayCategory.toUpperCase(),
                       style: AppTextStyles.labelSmall(color: AppColors.textSecondary).copyWith(
                         fontSize: 9,
                         letterSpacing: 1.0,
@@ -95,7 +95,7 @@ class CartItemCard extends StatelessWidget {
 
                 // Title
                 Text(
-                  product.title,
+                  product.displayTitle,
                   style: AppTextStyles.titleSmall(color: AppColors.textPrimary).copyWith(
                     fontWeight: FontWeight.w700,
                   ),

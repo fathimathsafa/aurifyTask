@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../core/responsive/responsive.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../core/routes/app_routes.dart';
 import '../controller/profile_controller.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_logout_button.dart';
 import '../widgets/profile_menu_section.dart';
-import '../widgets/profile_stats_card.dart';
 
 class ProfileScreen extends StatelessWidget {
   final ProfileController controller;
@@ -55,13 +53,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
 
-                    ProfileStatsCard(
-                      ordersCount: controller.ordersCount,
-                      wishlistCount: controller.wishlistCount,
-                      addressCount: controller.addressCount,
-                      onWishlistTap: () => Navigator.pushNamed(context, AppRoutes.wishlist),
-                    ),
-                    const SizedBox(height: 24),
+                   
 
                     const ProfileMenuSection(),
                     const SizedBox(height: 28),

@@ -1,28 +1,27 @@
-// ignore_for_file: constant_identifier_names
 // To parse this JSON data, do
 //
-//     final productModel = productModelFromJson(jsonString);
+//     final productSearchDetailsModel = productSearchDetailsModelFromJson(jsonString);
 
 import 'dart:convert';
 
-ProductModel productModelFromJson(String str) => ProductModel.fromJson(json.decode(str));
+ProductSearchDetailsModel productSearchDetailsModelFromJson(String str) => ProductSearchDetailsModel.fromJson(json.decode(str));
 
-String productModelToJson(ProductModel data) => json.encode(data.toJson());
+String productSearchDetailsModelToJson(ProductSearchDetailsModel data) => json.encode(data.toJson());
 
-class ProductModel {
+class ProductSearchDetailsModel {
     List<Product>? products;
     int? total;
     int? skip;
     int? limit;
 
-    ProductModel({
+    ProductSearchDetailsModel({
         this.products,
         this.total,
         this.skip,
         this.limit,
     });
 
-    factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+    factory ProductSearchDetailsModel.fromJson(Map<String, dynamic> json) => ProductSearchDetailsModel(
         products: json["products"] == null ? [] : List<Product>.from(json["products"]!.map((x) => Product.fromJson(x))),
         total: json["total"],
         skip: json["skip"],
@@ -41,7 +40,7 @@ class Product {
     int? id;
     String? title;
     String? description;
-    Category? category;
+    String? category;
     double? price;
     double? discountPercentage;
     double? rating;
@@ -53,15 +52,13 @@ class Product {
     Dimensions? dimensions;
     String? warrantyInformation;
     String? shippingInformation;
-    AvailabilityStatus? availabilityStatus;
+    String? availabilityStatus;
     List<Review>? reviews;
-    ReturnPolicy? returnPolicy;
+    String? returnPolicy;
     int? minimumOrderQuantity;
     Meta? meta;
     List<String>? images;
     String? thumbnail;
-
-    String? rawCategory;
 
     Product({
         this.id,
@@ -86,14 +83,13 @@ class Product {
         this.meta,
         this.images,
         this.thumbnail,
-        this.rawCategory,
     });
 
     factory Product.fromJson(Map<String, dynamic> json) => Product(
         id: json["id"],
         title: json["title"],
         description: json["description"],
-        category: categoryValues.map[json["category"]],
+        category: json["category"],
         price: json["price"]?.toDouble(),
         discountPercentage: json["discountPercentage"]?.toDouble(),
         rating: json["rating"]?.toDouble(),
@@ -105,21 +101,20 @@ class Product {
         dimensions: json["dimensions"] == null ? null : Dimensions.fromJson(json["dimensions"]),
         warrantyInformation: json["warrantyInformation"],
         shippingInformation: json["shippingInformation"],
-        availabilityStatus: availabilityStatusValues.map[json["availabilityStatus"]],
+        availabilityStatus: json["availabilityStatus"],
         reviews: json["reviews"] == null ? [] : List<Review>.from(json["reviews"]!.map((x) => Review.fromJson(x))),
-        returnPolicy: returnPolicyValues.map[json["returnPolicy"]],
+        returnPolicy: json["returnPolicy"],
         minimumOrderQuantity: json["minimumOrderQuantity"],
         meta: json["meta"] == null ? null : Meta.fromJson(json["meta"]),
         images: json["images"] == null ? [] : List<String>.from(json["images"]!.map((x) => x)),
         thumbnail: json["thumbnail"],
-        rawCategory: json["category"] as String?,
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
         "description": description,
-        "category": categoryValues.reverse[category] ?? rawCategory,
+        "category": category,
         "price": price,
         "discountPercentage": discountPercentage,
         "rating": rating,
@@ -131,21 +126,21 @@ class Product {
         "dimensions": dimensions?.toJson(),
         "warrantyInformation": warrantyInformation,
         "shippingInformation": shippingInformation,
-        "availabilityStatus": availabilityStatusValues.reverse[availabilityStatus],
+        "availabilityStatus": availabilityStatus,
         "reviews": reviews == null ? [] : List<dynamic>.from(reviews!.map((x) => x.toJson())),
-        "returnPolicy": returnPolicyValues.reverse[returnPolicy],
+        "returnPolicy": returnPolicy,
         "minimumOrderQuantity": minimumOrderQuantity,
         "meta": meta?.toJson(),
         "images": images == null ? [] : List<dynamic>.from(images!.map((x) => x)),
         "thumbnail": thumbnail,
     };
 
-    // Helpful getters for UI
+    // Helper getters
     String get imageUrl => (images != null && images!.isNotEmpty) ? images!.first : (thumbnail ?? '');
     List<String> get allImages => (images != null && images!.isNotEmpty) ? images! : (thumbnail != null ? [thumbnail!] : []);
     String get displayTitle => title ?? 'Untitled Product';
     String get displayBrand => brand ?? 'Aurify';
-    String get displayCategory => rawCategory ?? (category != null ? (categoryValues.reverse[category] ?? 'General') : 'General');
+    String get displayCategory => category ?? 'General';
     double get safePrice => price ?? 0.0;
     double get originalPrice => (discountPercentage != null && discountPercentage! > 0 && price != null)
         ? price! / (1 - (discountPercentage! / 100))
@@ -155,30 +150,6 @@ class Product {
     double get safeRating => rating ?? 0.0;
     int get reviewCount => reviews?.length ?? 0;
 }
-
-enum AvailabilityStatus {
-    IN_STOCK,
-    LOW_STOCK
-}
-
-final availabilityStatusValues = EnumValues({
-    "In Stock": AvailabilityStatus.IN_STOCK,
-    "Low Stock": AvailabilityStatus.LOW_STOCK
-});
-
-enum Category {
-    BEAUTY,
-    FRAGRANCES,
-    FURNITURE,
-    GROCERIES
-}
-
-final categoryValues = EnumValues({
-    "beauty": Category.BEAUTY,
-    "fragrances": Category.FRAGRANCES,
-    "furniture": Category.FURNITURE,
-    "groceries": Category.GROCERIES
-});
 
 class Dimensions {
     double? width;
@@ -232,22 +203,6 @@ class Meta {
     };
 }
 
-enum ReturnPolicy {
-    NO_RETURN_POLICY,
-    THE_30_DAYS_RETURN_POLICY,
-    THE_60_DAYS_RETURN_POLICY,
-    THE_7_DAYS_RETURN_POLICY,
-    THE_90_DAYS_RETURN_POLICY
-}
-
-final returnPolicyValues = EnumValues({
-    "No return policy": ReturnPolicy.NO_RETURN_POLICY,
-    "30 days return policy": ReturnPolicy.THE_30_DAYS_RETURN_POLICY,
-    "60 days return policy": ReturnPolicy.THE_60_DAYS_RETURN_POLICY,
-    "7 days return policy": ReturnPolicy.THE_7_DAYS_RETURN_POLICY,
-    "90 days return policy": ReturnPolicy.THE_90_DAYS_RETURN_POLICY
-});
-
 class Review {
     int? rating;
     String? comment;
@@ -278,16 +233,4 @@ class Review {
         "reviewerName": reviewerName,
         "reviewerEmail": reviewerEmail,
     };
-}
-
-class EnumValues<T> {
-    Map<String, T> map;
-    late Map<T, String> reverseMap;
-
-    EnumValues(this.map);
-
-    Map<T, String> get reverse {
-            reverseMap = map.map((k, v) => MapEntry(v, k));
-            return reverseMap;
-    }
 }

@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../features/cart_screen/controller/cart_controller.dart';
 import '../../features/cart_screen/view/cart_screen.dart';
+import '../../features/home_screen/controller/home_controller.dart';
 import '../../features/home_screen/model/product_model.dart';
 import '../../features/home_screen/view/home_screen.dart';
+import '../../features/login_screen/controller/login_controller.dart';
 import '../../features/login_screen/view/login_screen.dart';
+import '../../features/product_details_screen/controller/product_details_controller.dart';
 import '../../features/product_details_screen/view/product_details_screen.dart';
+import '../../features/profile_screen/controller/profile_controller.dart';
 import '../../features/profile_screen/view/profile_screen.dart';
+import '../../features/registration_screen/controller/registration_controller.dart';
 import '../../features/registration_screen/view/registration_screen.dart';
+import '../../features/splash_screen/view/splash_screen.dart';
+import '../../features/wishlist_screen/controller/wishlist_controller.dart';
 import '../../features/wishlist_screen/view/wishlist_screen.dart';
 import 'app_routes.dart';
 
@@ -17,50 +26,76 @@ class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case AppRoutes.initial:
+      case AppRoutes.splash:
+        return _buildRoute(
+          settings: settings,
+          builder: (_) => const SplashScreen(),
+        );
+
       case AppRoutes.register:
         return _buildRoute(
           settings: settings,
-          builder: (_) => RegistrationScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => RegistrationController(),
+            child: RegistrationScreen(),
+          ),
         );
 
       case AppRoutes.login:
         return _buildRoute(
           settings: settings,
-          builder: (_) => LoginScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => LoginController(),
+            child: LoginScreen(),
+          ),
         );
 
       case AppRoutes.home:
         return _buildRoute(
           settings: settings,
-          builder: (_) => HomeScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => HomeController(),
+            child: const HomeScreen(),
+          ),
         );
 
       case AppRoutes.productDetails:
-        final product = settings.arguments as ProductModel?;
-        if (product != null) {
-          return _buildRoute(
-            settings: settings,
-            builder: (_) => ProductDetailsScreen(product: product),
-          );
-        }
-        return _errorRoute(settings);
+        return _buildRoute(
+          settings: settings,
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => ProductDetailsController(
+              productId: settings.arguments is int ? settings.arguments as int : null,
+              initialProduct: settings.arguments is Product ? settings.arguments as Product : null,
+            ),
+            child: ProductDetailsScreen(),
+          ),
+        );
 
       case AppRoutes.wishlist:
         return _buildRoute(
           settings: settings,
-          builder: (_) => WishlistScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => WishlistController(),
+            child: WishlistScreen(),
+          ),
         );
 
       case AppRoutes.cart:
         return _buildRoute(
           settings: settings,
-          builder: (_) => CartScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => CartController(),
+            child: CartScreen(),
+          ),
         );
 
       case AppRoutes.profile:
         return _buildRoute(
           settings: settings,
-          builder: (_) => ProfileScreen(),
+          builder: (_) => ChangeNotifierProvider(
+            create: (_) => ProfileController(),
+            child: ProfileScreen(),
+          ),
         );
 
       default:

@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../home_screen/model/product_model.dart';
 import '../controller/product_details_controller.dart';
+import '../model/product_details_model.dart';
 import '../widgets/product_bottom_bar.dart';
 import '../widgets/product_description_widget.dart';
 import '../widgets/product_header_info.dart';
@@ -15,14 +16,16 @@ class ProductDetailsScreen extends StatelessWidget {
 
   ProductDetailsScreen({
     super.key,
-    required ProductModel product,
-    bool initialWishlisted = false,
+    int? productId,
+    Product? product,
+    ProductDetailsModel? productDetails,
     bool initialInCart = false,
     ProductDetailsController? controller,
   }) : controller = controller ??
             ProductDetailsController(
-              product: product,
-              initialWishlisted: initialWishlisted,
+              productId: productId ?? product?.id ?? productDetails?.id,
+              initialProduct: product,
+              initialDetails: productDetails,
               initialInCart: initialInCart,
             );
 
@@ -31,7 +34,7 @@ class ProductDetailsScreen extends StatelessWidget {
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
-        final product = controller.product;
+        final product = controller.productDetails;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -63,50 +66,101 @@ class ProductDetailsScreen extends StatelessWidget {
               const SizedBox(width: 8),
             ],
           ),
-          body: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 680),
-              child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
-                  horizontal: context.isMobile ? 20.0 : 32.0,
-                  vertical: 16.0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ProductImageCarousel(
-                      images: product.allImages,
-                      selectedIndex: controller.selectedImageIndex,
-                      onImageChanged: controller.setImageIndex,
-                    ),
-                    const SizedBox(height: 24),
+          body: controller.isLoading && product == null
+              ? const Center(
+                  child: CircularProgressIndicator(color: AppColors.black),
+                )
+              : controller.errorMessage != null && product == null
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline_rounded,
+                              size: 56,
+                              color: AppColors.gray500,
+                            ),
+                            const SizedBox(height: 12),
+                            Text(
+                              'Failed to Load Details',
+                              style: AppTextStyles.titleMedium(color: AppColors.textPrimary),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              controller.errorMessage!,
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodySmall(color: AppColors.textSecondary),
+                            ),
+                            const SizedBox(height: 16),
+                            if (controller.productId != null)
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.black,
+                                  foregroundColor: AppColors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () =>
+                                    controller.fetchProductDetails(controller.productId!),
+                                child: const Text('Try Again'),
+                              ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : product == null
+                      ? const Center(child: Text('Product not found'))
+                      : Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 680),
+                            child: SingleChildScrollView(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: context.isMobile ? 20.0 : 32.0,
+                                vertical: 16.0,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ProductImageCarousel(
+                                    images: product.allImages,
+                                    selectedIndex: controller.selectedImageIndex,
+                                    onImageChanged: controller.setImageIndex,
+                                  ),
+                                  const SizedBox(height: 24),
 
-                    ProductHeaderInfo(product: product),
-                    const SizedBox(height: 24),
-                    const Divider(color: AppColors.divider),
-                    const SizedBox(height: 20),
+                                  ProductHeaderInfo(product: product),
+                                  const SizedBox(height: 24),
+                                  const Divider(color: AppColors.divider),
+                                  const SizedBox(height: 20),
 
-                    ProductDescriptionWidget(description: product.description),
-                    const SizedBox(height: 24),
-                    const Divider(color: AppColors.divider),
-                    const SizedBox(height: 20),
+                                  ProductDescriptionWidget(
+                                    description: product.description ?? '',
+                                  ),
+                                  const SizedBox(height: 24),
+                                  const Divider(color: AppColors.divider),
+                                  const SizedBox(height: 20),
 
-                    ProductTagsWidget(
-                      category: product.category,
-                      tags: product.tags,
-                    ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          bottomNavigationBar: ProductBottomBar(
-            isWishlisted: controller.isWishlisted,
-            isInCart: controller.isInCart,
-            onWishlistTap: () => controller.toggleWishlist(context),
-            onAddToCart: () => controller.addToCart(context),
-          ),
+                                  ProductTagsWidget(
+                                    category: product.displayCategory,
+                                    tags: product.tags ?? [],
+                                  ),
+                                  const SizedBox(height: 32),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+          bottomNavigationBar: product != null
+              ? ProductBottomBar(
+                  isWishlisted: controller.isWishlisted,
+                  isInCart: controller.isInCart,
+                  onWishlistTap: () => controller.toggleWishlist(context),
+                  onAddToCart: () => controller.addToCart(context),
+                )
+              : null,
         );
       },
     );
