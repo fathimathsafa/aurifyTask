@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/routes/app_routes.dart';
+import '../../../core/services/auth_service.dart';
 
 class RegistrationController extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -8,6 +9,8 @@ class RegistrationController extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  final AuthService _authService = AuthService.instance;
 
   bool _isPasswordObscured = true;
   bool _isLoading = false;
@@ -70,12 +73,40 @@ class RegistrationController extends ChangeNotifier {
     if (formKey.currentState?.validate() ?? false) {
       setLoading(true);
 
-      await Future.delayed(const Duration(seconds: 2));
+      try {
+        await _authService.signUp(
+          email: emailController.text,
+          password: passwordController.text,
+          name: nameController.text,
+        );
 
-      setLoading(false);
+        setLoading(false);
 
-      if (context.mounted) {
-        Navigator.pushReplacementNamed(context, AppRoutes.home);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Account created successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            AppRoutes.home,
+            (route) => false,
+          );
+        }
+      } catch (errorMessage) {
+        setLoading(false);
+
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage.toString()),
+              backgroundColor: Colors.redAccent,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
       }
     }
   }
