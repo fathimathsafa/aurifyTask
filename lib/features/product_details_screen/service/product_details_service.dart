@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../../core/constants/api_endpoints.dart';
 import '../model/product_details_model.dart';
 
 class ProductDetailsService {
@@ -8,9 +9,9 @@ class ProductDetailsService {
 
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://dummyjson.com',
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
+      baseUrl: ApiEndpoints.baseUrl,
+      connectTimeout: ApiEndpoints.connectTimeout,
+      receiveTimeout: ApiEndpoints.receiveTimeout,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -18,10 +19,10 @@ class ProductDetailsService {
     ),
   );
 
-  /// Fetch product details by ID from https://dummyjson.com/products/{id}
+  /// Fetch product details by ID from ApiEndpoints.productDetails
   Future<ProductDetailsModel> getProductDetails(int id) async {
     try {
-      final response = await _dio.get('/products/$id');
+      final response = await _dio.get(ApiEndpoints.productDetails(id));
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data is Map<String, dynamic>) {

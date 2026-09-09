@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import '../../../core/constants/api_endpoints.dart';
 import '../model/category_model.dart';
 import '../model/product_model.dart';
 import '../model/product_search_model.dart';
@@ -10,9 +11,9 @@ class HomeProductService {
 
   final Dio _dio = Dio(
     BaseOptions(
-      baseUrl: 'https://dummyjson.com',
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
+      baseUrl: ApiEndpoints.baseUrl,
+      connectTimeout: ApiEndpoints.connectTimeout,
+      receiveTimeout: ApiEndpoints.receiveTimeout,
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -20,11 +21,11 @@ class HomeProductService {
     ),
   );
 
-  /// Fetch products from https://dummyjson.com/products
+  /// Fetch products from ApiEndpoints.products
   Future<ProductModel> getProducts({int limit = 30, int skip = 0}) async {
     try {
       final response = await _dio.get(
-        '/products',
+        ApiEndpoints.products,
         queryParameters: {
           'limit': limit,
           'skip': skip,
@@ -46,11 +47,11 @@ class HomeProductService {
     }
   }
 
-  /// Search products from https://dummyjson.com/products/search?q={query}
+  /// Search products from ApiEndpoints.searchProducts
   Future<ProductSearchDetailsModel> searchProducts(String query) async {
     try {
       final response = await _dio.get(
-        '/products/search',
+        ApiEndpoints.searchProducts,
         queryParameters: {
           'q': query,
         },
@@ -71,10 +72,10 @@ class HomeProductService {
     }
   }
 
-  /// Fetch categories from https://dummyjson.com/products/categories
+  /// Fetch categories from ApiEndpoints.categories
   Future<List<ProductCategoryModel>> getCategories() async {
     try {
-      final response = await _dio.get('/products/categories');
+      final response = await _dio.get(ApiEndpoints.categories);
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data is List) {
@@ -93,10 +94,10 @@ class HomeProductService {
     }
   }
 
-  /// Fetch products by category slug from https://dummyjson.com/products/category/{slug}
+  /// Fetch products by category slug from ApiEndpoints.productsByCategory
   Future<ProductModel> getProductsByCategory(String categorySlug) async {
     try {
-      final response = await _dio.get('/products/category/$categorySlug');
+      final response = await _dio.get(ApiEndpoints.productsByCategory(categorySlug));
 
       if (response.statusCode == 200 && response.data != null) {
         if (response.data is Map<String, dynamic>) {
