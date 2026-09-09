@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../core/responsive/responsive.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../home_screen/model/product_model.dart';
 import '../controller/product_details_controller.dart';
-import '../model/product_details_model.dart';
 import '../widgets/product_bottom_bar.dart';
 import '../widgets/product_description_widget.dart';
 import '../widgets/product_header_info.dart';
@@ -12,29 +11,21 @@ import '../widgets/product_image_carousel.dart';
 import '../widgets/product_tags_widget.dart';
 
 class ProductDetailsScreen extends StatelessWidget {
-  final ProductDetailsController controller;
+  final ProductDetailsController? controller;
 
-  ProductDetailsScreen({
+  const ProductDetailsScreen({
     super.key,
-    int? productId,
-    Product? product,
-    ProductDetailsModel? productDetails,
-    bool initialInCart = false,
-    ProductDetailsController? controller,
-  }) : controller = controller ??
-            ProductDetailsController(
-              productId: productId ?? product?.id ?? productDetails?.id,
-              initialProduct: product,
-              initialDetails: productDetails,
-              initialInCart: initialInCart,
-            );
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final ctrl = controller ?? Provider.of<ProductDetailsController>(context);
+
     return ListenableBuilder(
-      listenable: controller,
+      listenable: ctrl,
       builder: (context, _) {
-        final product = controller.productDetails;
+        final product = ctrl.productDetails;
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -56,17 +47,17 @@ class ProductDetailsScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: Icon(
-                  controller.isWishlisted
+                  ctrl.isWishlisted
                       ? Icons.favorite_rounded
                       : Icons.favorite_border_rounded,
-                  color: controller.isWishlisted ? AppColors.black : AppColors.gray700,
+                  color: ctrl.isWishlisted ? AppColors.black : AppColors.gray700,
                 ),
-                onPressed: () => controller.toggleWishlist(context),
+                onPressed: () => ctrl.toggleWishlist(context),
               ),
               const SizedBox(width: 8),
             ],
           ),
-          body: controller.isLoading && product == null
+          body: ctrl.isLoading && product == null
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -83,7 +74,7 @@ class ProductDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 )
-              : controller.errorMessage != null && product == null
+              : ctrl.errorMessage != null && product == null
                   ? Center(
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
@@ -114,12 +105,12 @@ class ProductDetailsScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              controller.errorMessage!,
+                              ctrl.errorMessage!,
                               textAlign: TextAlign.center,
                               style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
                             ),
                             const SizedBox(height: 24),
-                            if (controller.productId != null)
+                            if (ctrl.productId != null)
                               ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.black,
@@ -130,7 +121,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                   ),
                                 ),
                                 onPressed: () =>
-                                    controller.fetchProductDetails(controller.productId!),
+                                    ctrl.fetchProductDetails(ctrl.productId!),
                                 icon: const Icon(Icons.refresh_rounded, size: 18),
                                 label: const Text('Retry'),
                               ),
@@ -203,8 +194,8 @@ class ProductDetailsScreen extends StatelessWidget {
                                 children: [
                                   ProductImageCarousel(
                                     images: product.allImages,
-                                    selectedIndex: controller.selectedImageIndex,
-                                    onImageChanged: controller.setImageIndex,
+                                    selectedIndex: ctrl.selectedImageIndex,
+                                    onImageChanged: ctrl.setImageIndex,
                                   ),
                                   const SizedBox(height: 24),
 
@@ -232,10 +223,10 @@ class ProductDetailsScreen extends StatelessWidget {
                         ),
           bottomNavigationBar: product != null
               ? ProductBottomBar(
-                  isWishlisted: controller.isWishlisted,
-                  isInCart: controller.isInCart,
-                  onWishlistTap: () => controller.toggleWishlist(context),
-                  onAddToCart: () => controller.addToCart(context),
+                  isWishlisted: ctrl.isWishlisted,
+                  isInCart: ctrl.isInCart,
+                  onWishlistTap: () => ctrl.toggleWishlist(context),
+                  onAddToCart: () => ctrl.addToCart(context),
                 )
               : null,
         );

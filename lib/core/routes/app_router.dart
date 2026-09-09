@@ -8,6 +8,7 @@ import '../../features/home_screen/view/home_screen.dart';
 import '../../features/login_screen/controller/login_controller.dart';
 import '../../features/login_screen/view/login_screen.dart';
 import '../../features/product_details_screen/controller/product_details_controller.dart';
+import '../../features/product_details_screen/model/product_details_model.dart';
 import '../../features/product_details_screen/view/product_details_screen.dart';
 import '../../features/profile_screen/controller/profile_controller.dart';
 import '../../features/profile_screen/view/profile_screen.dart';
@@ -60,14 +61,29 @@ class AppRouter {
         );
 
       case AppRoutes.productDetails:
+        int? productId;
+        Product? initialProduct;
+        ProductDetailsModel? initialDetails;
+
+        if (settings.arguments is int) {
+          productId = settings.arguments as int;
+        } else if (settings.arguments is Product) {
+          initialProduct = settings.arguments as Product;
+          productId = initialProduct.id;
+        } else if (settings.arguments is ProductDetailsModel) {
+          initialDetails = settings.arguments as ProductDetailsModel;
+          productId = initialDetails.id;
+        }
+
         return _buildRoute(
           settings: settings,
           builder: (_) => ChangeNotifierProvider(
             create: (_) => ProductDetailsController(
-              productId: settings.arguments is int ? settings.arguments as int : null,
-              initialProduct: settings.arguments is Product ? settings.arguments as Product : null,
+              productId: productId,
+              initialProduct: initialProduct,
+              initialDetails: initialDetails,
             ),
-            child: ProductDetailsScreen(),
+            child: const ProductDetailsScreen(),
           ),
         );
 
