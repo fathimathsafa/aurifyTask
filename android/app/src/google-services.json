@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "128707766300",
+    "project_id": "aurify-e693c",
+    "storage_bucket": "aurify-e693c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:128707766300:android:41edf6241012de758b57d9",
+        "android_client_info": {
+          "package_name": "com.example.aurify_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBcdlNUYTWMockuAMK8X1C2hBukQH7Sqsc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
