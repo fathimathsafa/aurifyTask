@@ -79,19 +79,14 @@ class RegistrationController extends ChangeNotifier {
           password: passwordController.text,
           name: nameController.text,
         );
+        await _authService.signOut();
 
         setLoading(false);
 
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Account created successfully!'),
-              backgroundColor: Colors.green,
-            ),
-          );
           Navigator.pushNamedAndRemoveUntil(
             context,
-            AppRoutes.home,
+            AppRoutes.login,
             (route) => false,
           );
         }
