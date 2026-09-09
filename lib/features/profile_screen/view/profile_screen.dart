@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/responsive/responsive.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../wishlist_screen/view/wishlist_screen.dart';
+import '../../../core/routes/app_routes.dart';
 import '../controller/profile_controller.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/profile_logout_button.dart';
@@ -59,14 +59,7 @@ class ProfileScreen extends StatelessWidget {
                       ordersCount: controller.ordersCount,
                       wishlistCount: controller.wishlistCount,
                       addressCount: controller.addressCount,
-                      onWishlistTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => WishlistScreen(),
-                          ),
-                        );
-                      },
+                      onWishlistTap: () => Navigator.pushNamed(context, AppRoutes.wishlist),
                     ),
                     const SizedBox(height: 24),
 

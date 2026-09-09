@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../home_screen/model/product_model.dart';
-import '../../product_details_screen/view/product_details_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class WishlistItemCard extends StatelessWidget {
   final ProductModel product;
@@ -20,14 +20,10 @@ class WishlistItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => ProductDetailsScreen(
-              product: product,
-              initialWishlisted: true,
-            ),
-          ),
+          AppRoutes.productDetails,
+          arguments: product,
         );
       },
       child: Container(

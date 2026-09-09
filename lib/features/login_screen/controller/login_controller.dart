@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../home_screen/view/home_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class LoginController extends ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -53,10 +53,7 @@ class LoginController extends ChangeNotifier {
       setLoading(false);
 
       if (context.mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
+        Navigator.pushReplacementNamed(context, AppRoutes.home);
       }
     }
   }

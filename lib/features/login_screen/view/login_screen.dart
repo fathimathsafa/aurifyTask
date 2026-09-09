@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/responsive/responsive.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../registration_screen/view/registration_screen.dart';
+import '../../../core/routes/app_routes.dart';
 import '../controller/login_controller.dart';
 import '../widgets/login_button.dart';
 import '../widgets/login_footer.dart';
@@ -102,12 +102,7 @@ class LoginScreen extends StatelessWidget {
 
                         LoginFooter(
                           onRegisterTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegistrationScreen(),
-                              ),
-                            );
+                            Navigator.pushNamed(context, AppRoutes.register);
                           },
                         ),
                       ],

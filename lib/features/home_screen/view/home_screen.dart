@@ -7,10 +7,7 @@ import '../widgets/category_selector.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/home_search_bar.dart';
 import '../widgets/product_card.dart';
-import '../../product_details_screen/view/product_details_screen.dart';
-import '../../wishlist_screen/view/wishlist_screen.dart';
-import '../../cart_screen/view/cart_screen.dart';
-import '../../profile_screen/view/profile_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class HomeScreen extends StatelessWidget {
   final HomeController controller;
@@ -30,30 +27,9 @@ class HomeScreen extends StatelessWidget {
           appBar: HomeAppBar(
             cartCount: controller.cartCount,
             wishlistCount: controller.wishlistCount,
-            onCartTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CartScreen(),
-                ),
-              );
-            },
-            onWishlistTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WishlistScreen(),
-                ),
-              );
-            },
-            onProfileTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(),
-                ),
-              );
-            },
+            onCartTap: () => Navigator.pushNamed(context, AppRoutes.cart),
+            onWishlistTap: () => Navigator.pushNamed(context, AppRoutes.wishlist),
+            onProfileTap: () => Navigator.pushNamed(context, AppRoutes.profile),
           ),
           body: SafeArea(
             child: CustomScrollView(
@@ -157,18 +133,11 @@ class HomeScreen extends StatelessWidget {
                             isInCart: controller.isInCart(product.id),
                             onWishlistTap: () => controller.toggleWishlist(product.id, context),
                             onCartTap: () => controller.toggleCart(product.id, context),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ProductDetailsScreen(
-                                    product: product,
-                                    initialWishlisted: controller.isWishlisted(product.id),
-                                    initialInCart: controller.isInCart(product.id),
-                                  ),
-                                ),
-                              );
-                            },
+                            onTap: () => Navigator.pushNamed(
+                              context,
+                              AppRoutes.productDetails,
+                              arguments: product,
+                            ),
                           );
                         },
                         childCount: products.length,

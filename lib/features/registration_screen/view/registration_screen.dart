@@ -6,7 +6,7 @@ import '../widgets/registration_button.dart';
 import '../widgets/registration_footer.dart';
 import '../widgets/registration_header.dart';
 import '../widgets/registration_text_field.dart';
-import '../../login_screen/view/login_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class RegistrationScreen extends StatelessWidget {
   final RegistrationController controller;
@@ -104,12 +104,7 @@ class RegistrationScreen extends StatelessWidget {
                             if (Navigator.canPop(context)) {
                               Navigator.pop(context);
                             } else {
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),
-                                ),
-                              );
+                              Navigator.pushReplacementNamed(context, AppRoutes.login);
                             }
                           },
                         ),

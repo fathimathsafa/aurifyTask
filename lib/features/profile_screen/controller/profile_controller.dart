@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../login_screen/view/login_screen.dart';
+import '../../../core/routes/app_routes.dart';
 
 class ProfileController extends ChangeNotifier {
   String name = 'Alex Morgan';
@@ -40,9 +40,9 @@ class ProfileController extends ChangeNotifier {
             ),
             onPressed: () {
               Navigator.pop(ctx);
-              Navigator.pushAndRemoveUntil(
+              Navigator.pushNamedAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
+                AppRoutes.login,
                 (route) => false,
               );
             },
